@@ -76,12 +76,14 @@ namespace Microsoft.Unity.VisualStudio.Editor
 		private static EditorCodeType IsCandidateForDiscovery(string path)
 		{
 #if UNITY_EDITOR_OSX
-			return Directory.Exists(path) && Regex.IsMatch(path, ".*Code.*.app$", RegexOptions.IgnoreCase);
+			if (Directory.Exists(path) && Regex.IsMatch(path, ".*Code.*.app$", RegexOptions.IgnoreCase)) return EditorCodeType.VisualStudioCode;
+			return Directory.Exists(path) && Regex.IsMatch(path, ".*Trae.*.app$", RegexOptions.IgnoreCase) ? EditorCodeType.Trae : EditorCodeType.None;
 #elif UNITY_EDITOR_WIN
 			if (File.Exists(path) && Regex.IsMatch(path, ".*Code.*.exe$", RegexOptions.IgnoreCase)) return EditorCodeType.VisualStudioCode;
 			return File.Exists(path) && Regex.IsMatch(path, ".*Trae.*.exe$", RegexOptions.IgnoreCase) ? EditorCodeType.Trae : EditorCodeType.None;
 #else
-			return File.Exists(path) && path.EndsWith("code", StringComparison.OrdinalIgnoreCase);
+			if (File.Exists(path) && path.EndsWith("code", StringComparison.OrdinalIgnoreCase)) return EditorCodeType.VisualStudioCode;
+			return File.Exists(path) && path.EndsWith("trae", StringComparison.OrdinalIgnoreCase) ? EditorCodeType.Trae : EditorCodeType.None;
 #endif
 		}
 
