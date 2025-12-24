@@ -9,6 +9,8 @@
 
 ## 下载 microsoft 的 VisualStudioCode 支持插件
 
+> 当前支持 Visual Studio Code、Trae (国际版)
+
 ### Unity 支持
 - [Unity Debugger](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/visualstudiotoolsforunity/vsextensions/vstuc/latest/vspackage)
 
