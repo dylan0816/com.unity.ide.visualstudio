@@ -17,3 +17,13 @@
 #### Window 64
 - [csharp](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csharp/2.100.5/vspackage?targetPlatform=win32-x64)
 - [csdevkit](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csdevkit/1.90.2/vspackage?targetPlatform=win32-x64)
+
+#### MacOS Intel
+- [csharp](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csharp/2.100.5/vspackage?targetPlatform=darwin-x64)
+- [csdevkit](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csdevkit/1.90.2/vspackage?targetPlatform=darwin-x64)
+
+#### MacOS arm64
+- [csharp](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csharp/2.100.5/vspackage?targetPlatform=darwin-arm64)
+- [csdevkit](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-dotnettools/vsextensions/csdevkit/1.90.2/vspackage?targetPlatform=darwin-arm64)
+
+
