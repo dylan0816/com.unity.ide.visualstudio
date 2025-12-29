@@ -5,7 +5,7 @@
 - 在Unity Editor 中 打开`Window -> Package Manager`
 - 点击 `Package Manager` 左上角 `+` 号
 - 点击 `Add package from git URL`
-- 输入 `https://github.com/dylan0816/com.unity.ide.visualstudio.git#2.0.26`
+- 输入 `https://github.com/dylan0816/com.unity.ide.visualstudio.git#v2.0.26`
 
 ## 下载 microsoft 的 VisualStudioCode 支持插件
 
