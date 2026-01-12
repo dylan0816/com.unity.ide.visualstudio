@@ -89,16 +89,7 @@ namespace Microsoft.Unity.VisualStudio.Editor
 			}
 		}
 
-		private const string DefaultLaunchFileContent = @"{
-    ""version"": ""0.2.0"",
-    ""configurations"": [
-        {
-            ""name"": ""Attach to Unity"",
-            ""type"": ""vstuc"",
-            ""request"": ""attach""
-        }
-     ]
-}";
+		private static string DefaultLaunchFileContent => InstallationExtension.DefaultLaunchFileContent;
 
 		private static void CreateLaunchFile(string vscodeDirectory, bool enablePatch)
 		{
@@ -156,80 +147,8 @@ namespace Microsoft.Unity.VisualStudio.Editor
 				return;
 			}
 
-			const string excludes = @"    ""files.exclude"": {
-        ""**/.DS_Store"": true,
-        ""**/.git"": true,
-        ""**/.vs"": true,
-        ""**/.gitmodules"": true,
-        ""**/.vsconfig"": true,
-        ""**/*.booproj"": true,
-        ""**/*.pidb"": true,
-        ""**/*.suo"": true,
-        ""**/*.user"": true,
-        ""**/*.userprefs"": true,
-        ""**/*.unityproj"": true,
-        ""**/*.dll"": true,
-        ""**/*.exe"": true,
-        ""**/*.pdf"": true,
-        ""**/*.mid"": true,
-        ""**/*.midi"": true,
-        ""**/*.wav"": true,
-        ""**/*.gif"": true,
-        ""**/*.ico"": true,
-        ""**/*.jpg"": true,
-        ""**/*.jpeg"": true,
-        ""**/*.png"": true,
-        ""**/*.psd"": true,
-        ""**/*.tga"": true,
-        ""**/*.tif"": true,
-        ""**/*.tiff"": true,
-        ""**/*.3ds"": true,
-        ""**/*.3DS"": true,
-        ""**/*.fbx"": true,
-        ""**/*.FBX"": true,
-        ""**/*.lxo"": true,
-        ""**/*.LXO"": true,
-        ""**/*.ma"": true,
-        ""**/*.MA"": true,
-        ""**/*.obj"": true,
-        ""**/*.OBJ"": true,
-        ""**/*.asset"": true,
-        ""**/*.cubemap"": true,
-        ""**/*.flare"": true,
-        ""**/*.mat"": true,
-        ""**/*.meta"": true,
-        ""**/*.prefab"": true,
-        ""**/*.unity"": true,
-        ""build/"": true,
-        ""Build/"": true,
-        ""Library/"": true,
-        ""library/"": true,
-        ""obj/"": true,
-        ""Obj/"": true,
-        ""Logs/"": true,
-        ""logs/"": true,
-        ""ProjectSettings/"": true,
-        ""UserSettings/"": true,
-        ""temp/"": true,
-        ""Temp/"": true
-    }";
-
-			var content = @"{
-" + excludes + @",
-    ""files.associations"": {
-        ""*.asset"": ""yaml"",
-        ""*.meta"": ""yaml"",
-        ""*.prefab"": ""yaml"",
-        ""*.unity"": ""yaml"",
-    },
-    ""explorer.fileNesting.enabled"": true,
-    ""explorer.fileNesting.patterns"": {
-        ""*.sln"": ""*.csproj"",
-        ""*.slnx"": ""*.csproj""
-    },
-    ""dotnet.defaultSolution"": """ + IOPath.GetFileName(ProjectGenerator.SolutionFile()) + @"""
-}";
-
+			const string excludes = InstallationExtension.EXCLUDES;
+			var content = InstallationExtension.GetContent(excludes, ProjectGenerator.SolutionFile());
 			File.WriteAllText(settingsFile, content);
 		}
 
@@ -291,66 +210,7 @@ namespace Microsoft.Unity.VisualStudio.Editor
 			}
 		}
 
-		private const string MicrosoftUnityExtensionId = "visualstudiotoolsforunity.vstuc";
-		private const string DefaultRecommendedExtensionsContent = @"{
-    ""recommendations"": [
-      """ + MicrosoftUnityExtensionId + @"""
-    ]
-}
-";
-
-		// private static void CreateRecommendedExtensionsFile(string vscodeDirectory, bool enablePatch)
-		// {
-		// 	// see https://tattoocoder.com/recommending-vscode-extensions-within-your-open-source-projects/
-		// 	var extensionFile = IOPath.Combine(vscodeDirectory, "extensions.json");
-		// 	if (File.Exists(extensionFile))
-		// 	{
-		// 		if (enablePatch)
-		// 			PatchRecommendedExtensionsFile(extensionFile);
-
-		// 		return;
-		// 	}
-
-		// 	File.WriteAllText(extensionFile, DefaultRecommendedExtensionsContent);
-		// }
-
-		// private static void PatchRecommendedExtensionsFile(string extensionFile)
-		// {
-		// 	try
-		// 	{
-		// 		const string recommendationsKey = "recommendations";
-
-		// 		var content = File.ReadAllText(extensionFile);
-		// 		var extensions = JSONNode.Parse(content);
-
-		// 		var recommendations = extensions[recommendationsKey] as JSONArray;
-		// 		if (recommendations == null)
-		// 		{
-		// 			recommendations = new JSONArray();
-		// 			extensions.Add(recommendationsKey, recommendations);
-		// 		}
-
-		// 		if (recommendations.Linq.Any(entry => entry.Value.Value == MicrosoftUnityExtensionId))
-		// 			return;
-
-		// 		recommendations.Add(MicrosoftUnityExtensionId);
-		// 		WriteAllTextFromJObject(extensionFile, extensions);
-		// 	}
-		// 	catch (Exception)
-		// 	{
-		// 		// do not fail if we cannot patch the extensions.json file
-		// 	}
-		// }
-
-		// private static void WriteAllTextFromJObject(string file, JSONNode node)
-		// {
-		// 	using (var fs = File.Open(file, FileMode.Create))
-		// 	using (var sw = new StreamWriter(fs))
-		// 	{
-		// 		// Keep formatting/indent in sync with default contents
-		// 		sw.Write(node.ToString(aIndent: 4));
-		// 	}
-		// }
+		private const string MicrosoftUnityExtensionId = InstallationExtension.MicrosoftUnityExtensionId;
 
 		public override bool Open(string path, int line, int column, string solution)
 		{
@@ -370,26 +230,5 @@ namespace Microsoft.Unity.VisualStudio.Editor
 
 			return true;
 		}
-
-		// 		private static string TryFindWorkspace(string directory)
-		// 		{
-		// 			var files = Directory.GetFiles(directory, "*.code-workspace", SearchOption.TopDirectoryOnly);
-		// 			if (files.Length == 0 || files.Length > 1)
-		// 				return null;
-
-		// 			return files[0];
-		// 		}
-
-		// 		private static ProcessStartInfo ProcessStartInfoFor(string application, string arguments)
-		// 		{
-		// #if UNITY_EDITOR_OSX
-		// 			// wrap with built-in OSX open feature
-		// 			arguments = $"-n \"{application}\" --args {arguments}";
-		// 			application = "open";
-		// 			return ProcessRunner.ProcessStartInfoFor(application, arguments, redirect:false, shell: true);
-		// #else
-		// 			return ProcessRunner.ProcessStartInfoFor(application, arguments, redirect: false);
-		// #endif
-		// 		}
 	}
 }
