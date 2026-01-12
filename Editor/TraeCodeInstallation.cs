@@ -17,6 +17,9 @@ namespace Microsoft.Unity.VisualStudio.Editor
 {
 	internal class TraeCodeInstallation : VisualStudioInstallation
 	{
+		const string ExtensionDir = ".vscode";
+		private static string DefaultLaunchFileContent => InstallationExtension.DefaultLaunchFileContent;
+		private static string MicrosoftUnityExtensionId => InstallationExtension.MicrosoftUnityExtensionId;
 		private static readonly IGenerator _generator = GeneratorFactory.GetInstance(GeneratorStyle.SDK);
 
 		public override bool SupportsAnalyzers
@@ -37,7 +40,7 @@ namespace Microsoft.Unity.VisualStudio.Editor
 
 		private string GetExtensionPath()
 		{
-			var vscode = IsPrerelease ? ".vscode-insiders" : ".vscode";
+			var vscode = IsPrerelease ? $"{ExtensionDir}-insiders" : ExtensionDir;
 			var extensionsPath = IOPath.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), vscode, "extensions");
 			if (!Directory.Exists(extensionsPath))
 				return null;
@@ -64,18 +67,12 @@ namespace Microsoft.Unity.VisualStudio.Editor
 				return _generator;
 			}
 		}
-		[Serializable]
-		internal class VisualStudioCodeManifest
-		{
-			public string name;
-			public string version;
-		}
 
 		public override void CreateExtraFiles(string projectDirectory)
 		{
 			try
 			{
-				var vscodeDirectory = IOPath.Combine(projectDirectory.NormalizePathSeparators(), ".vscode");
+				var vscodeDirectory = IOPath.Combine(projectDirectory.NormalizePathSeparators(), ExtensionDir);
 				Directory.CreateDirectory(vscodeDirectory);
 
 				var enablePatch = !File.Exists(IOPath.Combine(vscodeDirectory, ".vstupatchdisable"));
@@ -89,7 +86,6 @@ namespace Microsoft.Unity.VisualStudio.Editor
 			}
 		}
 
-		private static string DefaultLaunchFileContent => InstallationExtension.DefaultLaunchFileContent;
 
 		private static void CreateLaunchFile(string vscodeDirectory, bool enablePatch)
 		{
@@ -209,8 +205,6 @@ namespace Microsoft.Unity.VisualStudio.Editor
 				// do not fail if we cannot patch the settings.json file
 			}
 		}
-
-		private const string MicrosoftUnityExtensionId = InstallationExtension.MicrosoftUnityExtensionId;
 
 		public override bool Open(string path, int line, int column, string solution)
 		{
